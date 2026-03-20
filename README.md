@@ -58,8 +58,10 @@ Make sure the dataset file (Nat_Gas.csv) is in the same folder as `Nat_Gas_Forec
 
 ```bash
 python Nat_Gas_Forecast.py
+```markdown
 
 ### Run Part 2: Pricing
 ```bash
 python Pricing.py
+
 
