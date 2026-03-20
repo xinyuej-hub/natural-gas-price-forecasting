@@ -1,26 +1,65 @@
-# Natural Gas Price Forecasting
+# Natural Gas Pricing and Storage Contract Valuation
 
-This project estimates natural gas prices for user-input dates based on historical monthly price data.
+A Python project for estimating natural gas prices and valuing a gas storage contract using time-series forecasting and cash-flow logic.
 
 ## Overview
-The script:
-- loads and prepares monthly natural gas price data,
-- visualizes the time series,
-- models trend and seasonality using Holt-Winters Exponential Smoothing,
-- forecasts prices for the next 12 months,
-- and estimates a price for any valid input date.
+
+This project is organized into two Python modules:
+
+- `Nat_Gas_Forecast.py`  
+  This is the first part of the project. It estimates natural gas prices for specific dates using historical monthly data, Holt-Winters forecasting, and time-based interpolation.
+
+- `Pricing.py`  
+  This is the second part of the project. It imports the forecasting module as `NGP` and uses the estimated gas prices to value a gas storage contract.
+
+## What `Pricing.py` Does
+
+`Pricing.py` prices a gas storage contract by combining:
+
+- injection dates
+- withdrawal dates
+- injection and withdrawal volumes
+- estimated gas prices on those dates
+- storage capacity limits
+- injection and withdrawal rate limits
+- storage and operating costs
+
+The contract value is calculated as:
+
+**Contract Value = Sales Revenue - Purchase Cost - Storage Cost - Operating Cost**
+
+## Files
+
+- `Nat_Gas_Forecast.py` — price forecasting module
+- `Pricing.py` — gas storage contract valuation module
 
 ## Method
-For dates within the historical and forecast range, the script uses time-based interpolation between monthly observed or forecasted values.  
-For future dates up to one year beyond the dataset, prices are generated using a Holt-Winters time series model with additive trend and additive seasonality.
 
-## Features
-- historical price estimation
-- one-year forward forecasting
-- repeated user input until `q` is entered to quit
+### Part 1: Price Estimation
+The forecasting script:
+- loads monthly natural gas price data,
+- models trend and seasonality using Holt-Winters Exponential Smoothing,
+- forecasts prices for the next 12 months,
+- and estimates prices for user-input dates.
+
+### Part 2: Contract Valuation
+The pricing script:
+- imports `Nat_Gas_Forecast.py` as `NGP`,
+- calls `NGP.estimate_price(date)` to estimate gas prices,
+- calculates purchase cost for injections,
+- calculates sales revenue for withdrawals,
+- deducts storage and operating costs,
+- and checks inventory and storage constraints.
 
 ## How to Run
-Place the dataset file(Nat_Gas.csv) in the same folder as the script, then run:
+
+### Run Part 1: Forecasting
+Make sure the dataset file (Nat_Gas.csv) is in the same folder as `Nat_Gas_Forecast.py`, then run:
 
 ```bash
 python Nat_Gas_Forecast.py
+
+### Run Part 2: Pricing
+```bash
+python Pricing.py
+
