@@ -32,6 +32,7 @@ The contract value is calculated as:
 
 - `Nat_Gas_Forecast.py` — price forecasting module
 - `Pricing.py` — gas storage contract valuation module
+
 Note: The dataset file is not included in this repository.
 
 ## Method
