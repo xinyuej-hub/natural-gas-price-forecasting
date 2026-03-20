@@ -22,20 +22,7 @@ df = df.sort_values("Dates").reset_index(drop=True)
 df.set_index("Dates", inplace=True)
 
 # =========================
-# 2. Visualize the data
-# =========================
-
-plt.figure(figsize=(12, 6))
-plt.plot(df.index, df["Prices"], marker="o")
-plt.title("Monthly Natural Gas Prices")
-plt.xlabel("Date")
-plt.ylabel("Price")
-plt.grid(True)
-plt.tight_layout()
-plt.show()
-
-# =========================
-# 3. Fit forecasting model
+# 2. Fit forecasting model
 # =========================
 # Monthly data with yearly seasonality -> seasonal_periods = 12
 
@@ -55,7 +42,7 @@ last_date = df.index.max()
 future_dates = pd.date_range(
     start=last_date + pd.offsets.MonthEnd(1),
     periods=forecast_horizon,
-    freq="M"
+    freq="ME"
 )
 
 forecast_series = pd.Series(future_forecast.values, index=future_dates)
@@ -64,7 +51,7 @@ forecast_series = pd.Series(future_forecast.values, index=future_dates)
 full_series = pd.concat([df["Prices"], forecast_series])
 
 # =========================
-# 4. Function to estimate price for any date
+# 3. Function to estimate price for any date
 # =========================
 
 def estimate_price(input_date):
@@ -111,39 +98,51 @@ def estimate_price(input_date):
     return float(combined.loc[input_date])
 
 # =========================
+# 4. Visualize the data
+# =========================
+if __name__ == "__main__":
+    plt.figure(figsize=(12, 6))
+    plt.plot(df.index, df["Prices"], marker="o")
+    plt.title("Monthly Natural Gas Prices")
+    plt.xlabel("Date")
+    plt.ylabel("Price")
+    plt.grid(True)
+    plt.tight_layout()
+    plt.show()
+
+# =========================
 # 5. Take user input and estimate
 # =========================
 
-user_date = input("Enter a date (YYYY-MM-DD) or 'q' to quit: ").strip()
-
-while user_date.lower() != "q":
-    try:
-        estimated_price = estimate_price(user_date)
-        print(f"Estimated price for {user_date}: {estimated_price:.2f}")
-    except Exception as e:
-        print("Error:", e)
-
     user_date = input("Enter a date (YYYY-MM-DD) or 'q' to quit: ").strip()
 
-print("Exiting program.")
+    while user_date.lower() != "q":
+        try:
+            estimated_price = estimate_price(user_date)
+            print(f"Estimated price for {user_date}: {estimated_price:.2f}")
+        except Exception as e:
+            print("Error:", e)
+
+        user_date = input("Enter a date (YYYY-MM-DD) or 'q' to quit: ").strip()
+
+    print("Exiting program.")
 
 # =========================
 # 6. Plot historical data + forecast
 # =========================
-
-plt.figure(figsize=(12, 6))
-plt.plot(df.index, df["Prices"], marker="o", label="Historical Prices")
-plt.plot(
-    forecast_series.index,
-    forecast_series.values,
-    marker="o",
-    linestyle="--",
-    label="Forecast (Next 12 Months)"
-)
-plt.title("Natural Gas Prices: Historical Data and 12-Month Forecast")
-plt.xlabel("Date")
-plt.ylabel("Price")
-plt.legend()
-plt.grid(True)
-plt.tight_layout()
-plt.show()
+    plt.figure(figsize=(12, 6))
+    plt.plot(df.index, df["Prices"], marker="o", label="Historical Prices")
+    plt.plot(
+        forecast_series.index,
+        forecast_series.values,
+        marker="o",
+        linestyle="--",
+        label="Forecast (Next 12 Months)"
+    )
+    plt.title("Natural Gas Prices: Historical Data and 12-Month Forecast")
+    plt.xlabel("Date")
+    plt.ylabel("Price")
+    plt.legend()
+    plt.grid(True)
+    plt.tight_layout()
+    plt.show()
